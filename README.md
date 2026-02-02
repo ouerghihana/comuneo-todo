@@ -1,87 +1,141 @@
-# Welcome to React Router!
+# COMUNEO Todo App
 
-A modern, production-ready template for building full-stack React applications using React Router.
+A small full-stack Todo application built with React Router, TypeScript, and Appwrite.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+This application allows users to authenticate and manage a hierarchical todo list (parent tasks and sub-tasks) with persistent storage.
 
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+This mini-project demonstrates frontend architecture, state management, API integration, data persistence, and DevOps awareness.
 
 ---
 
-Built with ❤️ using React Router.
+## Features
+
+- User authentication (signup, login, logout)
+- Create, delete, and toggle todos
+- Support for parent tasks and sub-tasks
+- Persistent data stored in Appwrite Database
+- Clean separation of concerns (hooks, API layer, components)
+- Minimal and responsive UI
+
+---
+
+## Tech Stack
+
+- Frontend: React, React Router, TypeScript  
+- Backend (BaaS): Appwrite  
+- Styling: CSS  
+- Build Tool: Vite  
+- Testing: Vitest  
+- Containerization: Docker  
+
+---
+
+## Project Structure
+
+app/
+components/        UI components  
+hooks/             Custom React hooks  
+lib/               Appwrite client and API logic  
+routes/            Application routes  
+styles/            CSS files  
+types/             TypeScript types  
+root.tsx           App root  
+routes.ts          Route configuration  
+test/              Test setup  
+
+---
+
+## Data Persistence
+
+When a user logs in, their todo list is fetched from Appwrite Database using their user ID.
+
+All create, update, and delete operations are persisted server-side and reflected immediately in the UI.
+
+This demonstrates the complete data flow:
+
+Client → API layer → Appwrite → Client UI
+
+---
+
+## Environment Variables
+
+Create a .env file in the project root and define the following variables:
+
+VITE_APPWRITE_ENDPOINT=your_appwrite_endpoint  
+VITE_APPWRITE_PROJECT_ID=your_project_id  
+VITE_APPWRITE_DATABASE_ID=your_database_id  
+VITE_APPWRITE_COLLECTION_ID=your_collection_id  
+
+Note:  
+These values must be replaced with your own Appwrite credentials locally.  
+
+---
+
+## Local Development
+
+Install dependencies:
+
+npm install
+
+Start the development server:
+
+npm run dev
+
+The application will be available at:
+
+http://localhost:5173
+
+---
+
+## Testing
+
+Run tests with:
+
+npm run test
+
+---
+
+## CI/CD Pipeline (Design Proposal)
+
+This project includes a conceptual CI/CD pipeline design to demonstrate DevOps understanding.
+
+Pipeline steps include:
+
+- Install dependencies  
+- Run linting  
+- Execute automated tests  
+- Build the application  
+- Deploy to a cloud platform  
+
+Tools and platforms that could be used:
+
+- GitHub Actions for CI/CD automation  
+- Node.js and npm for dependency management  
+- Vite for production builds  
+
+Deployment strategy:
+
+The application can be deployed to platforms such as Vercel, Netlify, or Railway.
+
+Environment variables (Appwrite credentials) are configured securely on the deployment platform.
+
+This pipeline is a design proposal and reflects modern software delivery best practices.
+
+---
+
+## Docker (Optional)
+
+Build the Docker image:
+
+docker build -t comuneo-todo .
+
+Run the container:
+
+docker run -p 3000:3000 comuneo-todo
+
+---
+
+## Author
+
+Hana Ouerghi  
+Full-Stack Developer
