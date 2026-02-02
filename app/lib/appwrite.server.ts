@@ -1,27 +1,26 @@
-//appwrite.server.ts
 import { Client, Account } from "appwrite";
 
-const endpoint = process.env.APPWRITE_ENDPOINT;
-const projectId = process.env.APPWRITE_PROJECT_ID;
+// Read Appwrite configuration from environment variables
+const endpoint = process.env.VITE_APPWRITE_ENDPOINT;
+const projectId = process.env.VITE_APPWRITE_PROJECT_ID;
 
-// Validate required server environment variables
+// Ensure required environment variables exist
 if (!endpoint || !projectId) {
-  throw new Error("Missing Appwrite server environment variables");
+  throw new Error("Missing Appwrite environment variables");
 }
 
-// Create an Appwrite Account instance for server-side usage
+// Create and return an Appwrite Account instance for server usage
 export function getServerAccount(cookie?: string) {
+  // Initialize Appwrite client
   const client = new Client()
     .setEndpoint(endpoint as string)
     .setProject(projectId as string);
 
-// Attach user session if available (SSR / API routes)
-
+  // Attach session cookie if provided (for authenticated requests)
   if (cookie) {
     client.setSession(cookie);
   }
 
+  // Return Account API instance
   return new Account(client);
 }
-
-
