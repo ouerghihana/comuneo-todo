@@ -33,16 +33,10 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   const password = String(formData.get("password"));
 
   try {
-    // If already logged, go home
-    try {
-      await account.get();
-      navigate("/", { replace: true });
-      return;
-    } catch {}
-
-    // Create session
+    // Create Appwrite session
     await account.createEmailPasswordSession(email, password);
 
+    // Redirect to home
     navigate("/", { replace: true });
   } catch (err: any) {
     setError(err?.message || "Login failed");
@@ -50,6 +44,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     setLoading(false);
   }
 }
+
 
 
   return (
