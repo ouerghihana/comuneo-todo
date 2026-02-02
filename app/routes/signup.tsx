@@ -39,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
     } satisfies ActionData;
   }
 
-  const account = getServerAccount();
+const account = getServerAccount(request);
 
   try {
     await account.create(ID.unique(), email, password);
