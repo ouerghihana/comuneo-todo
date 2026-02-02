@@ -13,28 +13,36 @@ export default function HomePage() {
   const { logout } = useAuth();
 
   const [userId, setUserId] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
+  const [checking, setChecking] = useState(true);
 
   // Check Appwrite session on page load
   useEffect(() => {
     console.log("[HOME] checking session...");
 
-    const timer = setTimeout(() => {
+    let attempts = 0;
+
+    const interval = setInterval(() => {
+      attempts++;
+
       account
         .get()
         .then((me) => {
           console.log("[HOME] session OK", me);
           setUserId(me.$id);
-          setReady(true);
+          setChecking(false);
+          clearInterval(interval);
         })
-        .catch((err) => {
-          console.error("[HOME] NO SESSION", err);
-          setReady(true);
-          navigate("/login", { replace: true });
+        .catch(() => {
+          if (attempts >= 5) {
+            console.error("[HOME] NO SESSION after retries");
+            setChecking(false);
+            clearInterval(interval);
+            navigate("/login", { replace: true });
+          }
         });
-    }, 300);
+    }, 500); // retry every 500ms
 
-    return () => clearTimeout(timer);
+    return () => clearInterval(interval);
   }, [navigate]);
 
   // Todos depend on authenticated user
@@ -48,7 +56,7 @@ export default function HomePage() {
   } = useTodos(userId);
 
   // While session is unknown, render nothing
-  if (!ready) return null;
+  if (checking) return null;
   if (!userId) return null;
 
   return (
