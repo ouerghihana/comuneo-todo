@@ -10,17 +10,24 @@ import "~/styles/todos.css";
 
 export default function HomePage() {
   const navigate = useNavigate();
-
   const { logout } = useAuth();
 
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Check active session and get user id
+  // Check Appwrite session on page load
   useEffect(() => {
+    console.log("[HOME] checking session...");
+
     account
       .get()
-      .then((me) => setUserId(me.$id))
-      .catch(() => navigate("/login", { replace: true }));
+      .then((me) => {
+        console.log("[HOME] session OK", me);
+        setUserId(me.$id);
+      })
+      .catch((err) => {
+        console.error("[HOME] NO SESSION", err);
+        navigate("/login", { replace: true });
+      });
   }, [navigate]);
 
   // Todos depend on authenticated user
@@ -33,7 +40,7 @@ export default function HomePage() {
     remove,
   } = useTodos(userId);
 
-  // Wait for session to be ready
+  // While session is unknown, render nothing
   if (!userId) return null;
 
   return (
@@ -53,9 +60,7 @@ export default function HomePage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="New todo"
-            onKeyDown={(e) =>
-              e.key === "Enter" && add(title, null)
-            }
+            onKeyDown={(e) => e.key === "Enter" && add(title, null)}
           />
           <button
             className="new-todo-add"

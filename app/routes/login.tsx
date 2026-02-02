@@ -11,37 +11,44 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Read navigation message once (e.g. after signup) and auto-dismiss
+  // Show success message once (ex: after signup)
   useEffect(() => {
     if (location.state?.message) {
       setSuccess(location.state.message);
-
-      // Clear history state to avoid showing the message again
       window.history.replaceState({}, document.title);
 
-      const timer = setTimeout(() => {
-        setSuccess(null);
-      }, 3000);
-
+      const timer = setTimeout(() => setSuccess(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [location.state]);
 
-  // Handle login form submission
+  // Handle login
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
     setLoading(true);
+    setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const email = String(formData.get("email") || "");
-    const password = String(formData.get("password") || "");
+    const email = String(formData.get("email"));
+    const password = String(formData.get("password"));
+
+    console.log("[LOGIN] submit", { email });
 
     try {
-      await account.createEmailPasswordSession(email, password);
+      // Create Appwrite session
+      const session = await account.createEmailPasswordSession(
+        email,
+        password
+      );
+      console.log("[LOGIN] session created", session);
+
+      // Immediately test if session is usable
+      const me = await account.get();
+      console.log("[LOGIN] account.get after login", me);
+
       navigate("/", { replace: true });
     } catch (err: any) {
+      console.error("[LOGIN] ERROR", err);
       setError(err?.message || "Login failed");
     } finally {
       setLoading(false);
@@ -58,21 +65,20 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <input
-  type="email"
-  name="email"
-  placeholder="Email"
-  required
-  autoComplete="email"
-/>
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            autoComplete="email"
+          />
 
-<input
-  type="password"
-  name="password"
-  placeholder="Password"
-  required
-  autoComplete="current-password"
-/>
-
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+            autoComplete="current-password"
+          />
 
           <button type="submit" disabled={loading}>
             {loading ? "..." : "Login"}
