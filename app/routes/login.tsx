@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Show success message once (ex: after signup)
+  // Show success message once 
   useEffect(() => {
     if (location.state?.message) {
       setSuccess(location.state.message);
@@ -22,36 +22,35 @@ export default function LoginPage() {
     }
   }, [location.state]);
 
-  // Handle login
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+ // Handle login
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
 
-    const formData = new FormData(e.currentTarget);
-    const email = String(formData.get("email"));
-    const password = String(formData.get("password"));
+  const formData = new FormData(e.currentTarget);
+  const email = String(formData.get("email"));
+  const password = String(formData.get("password"));
 
-    console.log("[LOGIN] submit", { email });
-
+  try {
+    // If already logged, go home
     try {
-      // Create Appwrite session
-      const session = await account.createEmailPasswordSession(
-        email,
-        password
-      );
-      console.log("[LOGIN] session created", session);
-
-     
-
+      await account.get();
       navigate("/", { replace: true });
-    } catch (err: any) {
-      console.error("[LOGIN] ERROR", err);
-      setError(err?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
+      return;
+    } catch {}
+
+    // Create session
+    await account.createEmailPasswordSession(email, password);
+
+    navigate("/", { replace: true });
+  } catch (err: any) {
+    setError(err?.message || "Login failed");
+  } finally {
+    setLoading(false);
   }
+}
+
 
   return (
     <div className="auth-page">
