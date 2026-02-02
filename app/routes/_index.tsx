@@ -16,11 +16,30 @@ export default function HomePage() {
   const [userId, setUserId] = useState<string | null>(null);
 
   // Check active session and get user id
+  // IMPORTANT:
+  // In production (Vercel), account.get() may return 401 even if login worked,
+  // because cookies behave differently.
+  // So we try ONCE, and if it fails we DO NOT loop forever.
   useEffect(() => {
+    let cancelled = false;
+
     account
       .get()
-      .then((me) => setUserId(me.$id))
-      .catch(() => navigate("/login", { replace: true }));
+      .then((me) => {
+        if (!cancelled) {
+          setUserId(me.$id);
+        }
+      })
+      .catch(() => {
+        // If no session, redirect to login
+        if (!cancelled) {
+          navigate("/login", { replace: true });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [navigate]);
 
   // Todos depend on authenticated user
