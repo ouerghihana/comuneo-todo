@@ -42,9 +42,7 @@ export default function LoginPage() {
       );
       console.log("[LOGIN] session created", session);
 
-      // Immediately test if session is usable
-      const me = await account.get();
-      console.log("[LOGIN] account.get after login", me);
+     
 
       navigate("/", { replace: true });
     } catch (err: any) {
