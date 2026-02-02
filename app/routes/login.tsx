@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Show success message once 
+  // Show success message once (after logout)
   useEffect(() => {
     if (location.state?.message) {
       setSuccess(location.state.message);
@@ -22,30 +22,27 @@ export default function LoginPage() {
     }
   }, [location.state]);
 
- // Handle login
-async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-  const formData = new FormData(e.currentTarget);
-  const email = String(formData.get("email"));
-  const password = String(formData.get("password"));
+    const formData = new FormData(e.currentTarget);
+    const email = String(formData.get("email"));
+    const password = String(formData.get("password"));
 
-  try {
-    // Create Appwrite session
-    await account.createEmailPasswordSession(email, password);
+    try {
+      // Create Appwrite session
+      await account.createEmailPasswordSession(email, password);
 
-    // Redirect to home
-    navigate("/", { replace: true });
-  } catch (err: any) {
-    setError(err?.message || "Login failed");
-  } finally {
-    setLoading(false);
+      // Go to home
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      setError(err?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   }
-}
-
-
 
   return (
     <div className="auth-page">

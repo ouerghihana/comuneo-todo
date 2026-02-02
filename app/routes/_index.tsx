@@ -21,28 +21,28 @@ export default function HomePage() {
   const [user, setUser] = useState<AppwriteUser | null>(null);
   const [checking, setChecking] = useState(true);
 
-  // Check Appwrite session ONCE on page load
+  // Check Appwrite session ONCE
   useEffect(() => {
-    console.log("[HOME] checking session...");
-
     account
       .get()
       .then((me: any) => {
-        console.log("[HOME] session OK", me);
-        setUser({ $id: me.$id, name: me.name, email: me.email });
+        setUser({
+          $id: me.$id,
+          name: me.name,
+          email: me.email,
+        });
         setChecking(false);
       })
-      .catch((err: any) => {
-        console.error("[HOME] NO SESSION", err);
+      .catch(() => {
         setChecking(false);
         navigate("/login", { replace: true });
       });
   }, [navigate]);
 
-  // Todos depend on authenticated user
-  const { todos, title, setTitle, add, toggle, remove } = useTodos(user?.$id ?? null);
+  const { todos, title, setTitle, add, toggle, remove } = useTodos(
+    user?.$id ?? null
+  );
 
-  // While checking auth, render nothing
   if (checking) return null;
   if (!user) return null;
 
@@ -52,9 +52,8 @@ export default function HomePage() {
         <header className="todo-header">
           <div>
             <h1>Todos</h1>
-            {/* Optional: useful for debugging / UX */}
             <div style={{ opacity: 0.7, fontSize: 12 }}>
-              {user.email ? user.email : user.$id}
+              {user.email ?? user.$id}
             </div>
           </div>
 

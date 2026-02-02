@@ -8,12 +8,10 @@ export function useAuth() {
   const navigate = useNavigate();
 
   async function logout() {
-    console.log("[AUTH] logout");
-
     // Kill Appwrite session
     await account.deleteSession("current");
 
-    // Redirect to login with a message
+    // Redirect to login
     navigate("/login", {
       replace: true,
       state: { message: "Successfully logged out" },
