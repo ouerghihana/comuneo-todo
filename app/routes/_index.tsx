@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 
 import TodoItem from "~/components/TodoItem";
 import { useTodos } from "~/hooks/useTodos";
@@ -15,14 +14,16 @@ type AppwriteUser = {
 };
 
 export default function HomePage() {
-  const navigate = useNavigate();
   const { logout } = useAuth();
 
   const [user, setUser] = useState<AppwriteUser | null>(null);
-  const [checking, setChecking] = useState(true);
+  const [loadingUser, setLoadingUser] = useState(true);
 
-  // Check Appwrite session ONCE
+  // Load authenticated user ONCE
+ 
+  // - Route protection is handled by <ProtectedRoute />
   useEffect(() => {
+
     account
       .get()
       .then((me: any) => {
@@ -31,19 +32,24 @@ export default function HomePage() {
           name: me.name,
           email: me.email,
         });
-        setChecking(false);
       })
-      .catch(() => {
-        setChecking(false);
-        navigate("/login", { replace: true });
+      .catch((err: any) => {
+        // If this fails, ProtectedRoute will already have redirected
+      })
+      .finally(() => {
+        setLoadingUser(false);
       });
-  }, [navigate]);
+  }, []);
 
+  // Todos depend on authenticated user
   const { todos, title, setTitle, add, toggle, remove } = useTodos(
     user?.$id ?? null
   );
 
-  if (checking) return null;
+  // While loading user, render nothing
+  if (loadingUser) return null;
+
+  // Safety guard (should not normally happen because of ProtectedRoute)
   if (!user) return null;
 
   return (
@@ -53,7 +59,7 @@ export default function HomePage() {
           <div>
             <h1>Todos</h1>
             <div style={{ opacity: 0.7, fontSize: 12 }}>
-              {user.email ?? user.$id}
+              {user.email ? user.email : user.$id}
             </div>
           </div>
 
@@ -71,7 +77,10 @@ export default function HomePage() {
             placeholder="New todo"
             onKeyDown={(e) => e.key === "Enter" && add(title, null)}
           />
-          <button className="new-todo-add" onClick={() => add(title, null)}>
+          <button
+            className="new-todo-add"
+            onClick={() => add(title, null)}
+          >
             Add
           </button>
         </div>

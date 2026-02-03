@@ -31,17 +31,15 @@ export default function LoginPage() {
     const email = String(formData.get("email"));
     const password = String(formData.get("password"));
 
-    try {
-      // Create Appwrite session
-      await account.createEmailPasswordSession(email, password);
+   try {
+  await account.createEmailPasswordSession(email, password);
+navigate("/", { replace: true });
 
-      // Go to home
-      navigate("/", { replace: true });
-    } catch (err: any) {
-      setError(err?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
+
+} catch (err: any) {
+  setError(err?.message || "Login failed");
+}
+
   }
 
   return (
