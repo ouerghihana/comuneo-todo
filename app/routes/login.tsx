@@ -22,25 +22,30 @@ export default function LoginPage() {
     }
   }, [location.state]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
 
-    const formData = new FormData(e.currentTarget);
-    const email = String(formData.get("email"));
-    const password = String(formData.get("password"));
+  const formData = new FormData(e.currentTarget);
+  const email = String(formData.get("email"));
+  const password = String(formData.get("password"));
 
-   try {
-  await account.createEmailPasswordSession(email, password);
-navigate("/", { replace: true });
+  try {
+    // Create session
+    await account.createEmailPasswordSession(email, password);
 
+    // wait until session is really available (prod fix)
+    await account.get();
 
-} catch (err: any) {
-  setError(err?.message || "Login failed");
+    // Now navigation is safe
+    navigate("/", { replace: true });
+  } catch (err: any) {
+    setError(err?.message || "Login failed");
+    setLoading(false);
+  }
 }
 
-  }
 
   return (
     <div className="auth-page">
