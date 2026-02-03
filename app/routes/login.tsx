@@ -31,20 +31,25 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
 
+  console.log("[LOGIN] submit", email);
+
   try {
-    // Create session
-    await account.createEmailPasswordSession(email, password);
+    console.log("[LOGIN] creating session...");
+    const session = await account.createEmailPasswordSession(email, password);
+    console.log("[LOGIN] session created", session);
 
-    // wait until session is really available (prod fix)
-    await account.get();
+    console.log("[LOGIN] checking account...");
+    const me = await account.get();
+    console.log("[LOGIN] account OK", me);
 
-    // Now navigation is safe
     navigate("/", { replace: true });
   } catch (err: any) {
+    console.error("[LOGIN] ERROR", err);
     setError(err?.message || "Login failed");
     setLoading(false);
   }
 }
+
 
 
   return (
