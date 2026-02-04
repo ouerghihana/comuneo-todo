@@ -24,7 +24,6 @@ export function useTodos(userId: string | null) {
         }
       })
       .catch(() => {
-        // optional: handle error
       });
 
     return () => {
@@ -45,7 +44,7 @@ export function useTodos(userId: string | null) {
       setTodos(data);
       setTitle("");
     } catch (err) {
-      // optional: handle error
+    
     }
   }
 
