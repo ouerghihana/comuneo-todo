@@ -7,6 +7,8 @@ This application allows users to authenticate and manage a hierarchical todo lis
 This mini-project demonstrates frontend architecture, state management, API integration, data persistence, and DevOps awareness.
 
 ---
+Live demo :  
+https://comuneo-todo-vert.vercel.app
 
 ## Features
 
@@ -123,17 +125,7 @@ This pipeline is a design proposal and reflects modern software delivery best pr
 
 ---
 
-## Docker (Optional)
 
-Build the Docker image:
-
-docker build -t comuneo-todo .
-
-Run the container:
-
-docker run -p 3000:3000 comuneo-todo
-
----
 
 ## Author
 
