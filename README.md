@@ -7,7 +7,7 @@ This application allows users to authenticate and manage a hierarchical todo lis
 This mini-project demonstrates frontend architecture, state management, API integration, data persistence, and DevOps awareness.
 
 ---
-Live demo :  
+## Live demo :  
 https://comuneo-todo-vert.vercel.app
 
 ## Features
@@ -27,8 +27,9 @@ https://comuneo-todo-vert.vercel.app
 - Backend (BaaS): Appwrite  
 - Styling: CSS  
 - Build Tool: Vite  
-- Testing: Vitest  
-- Containerization: Docker  
+- Testing: Vitest (basic UI tests for core user interactions)
+
+
 
 ---
 
