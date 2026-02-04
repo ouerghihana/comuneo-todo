@@ -1,26 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { account } from "~/lib/appwrite.client";
 
-export default function ProtectedRoute({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+type Props = {
+  children: ReactNode;
+};
+
+export default function ProtectedRoute({ children }: Props) {
   const navigate = useNavigate();
-  const [allowed, setAllowed] = useState<boolean | null>(null);
+const [allowed, setAllowed] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    account
-      .get()
-      .then(() => setAllowed(true))
-      .catch(() => {
-        setAllowed(false);
-        navigate("/login", { replace: true });
-      });
-  }, [navigate]);
+useEffect(() => {
+  account
+    .get()
+    .then(() => setAllowed(true))
+    .catch(() => {
+      setAllowed(false);
+      navigate("/login", { replace: true });
+    });
+}, [navigate]);
 
-  if (allowed === null) return null;
+if (allowed === null) return null; // loading
+if (allowed === false) return null;
 
-  return <>{children}</>;
+return <>{children}</>;
+
 }

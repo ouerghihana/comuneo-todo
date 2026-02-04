@@ -31,24 +31,18 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
 
-  console.log("[LOGIN] submit", email);
-
-  try {
-    console.log("[LOGIN] creating session...");
-    const session = await account.createEmailPasswordSession(email, password);
-    console.log("[LOGIN] session created", session);
-
-    console.log("[LOGIN] checking account...");
-    const me = await account.get();
-    console.log("[LOGIN] account OK", me);
-
-    navigate("/", { replace: true });
-  } catch (err: any) {
-    console.error("[LOGIN] ERROR", err);
-    setError(err?.message || "Login failed");
-    setLoading(false);
-  }
+ try {
+  const session = await account.createEmailPasswordSession(email, password);
+  await account.get();
+  navigate("/", { replace: true });
+} catch (err: any) {
+  setError(err?.message || "Login failed");
+} finally {
+  setLoading(false);
 }
+
+}
+
 
 
 

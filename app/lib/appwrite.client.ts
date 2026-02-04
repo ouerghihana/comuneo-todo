@@ -15,6 +15,7 @@ if (!endpoint || !projectId || !databaseId || !collectionId) {
 const client = new Client()
   .setEndpoint(endpoint)
   .setProject(projectId);
+  
 
 // Reusable Appwrite services
 export const account = new Account(client);
